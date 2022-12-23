@@ -1,12 +1,75 @@
 {% load static %}
-<!-- Использованы классы бустрапа для создания типовой навигации с логотипом -->
-      <!-- В дальнейшем тут будет создано полноценное меню -->
-<nav class="navbar navbar-light" style="background-color: lightskyblue">
-  <div class="container">
-    <a class="navbar-brand" href="{% url 'posts:index' %}">
-      <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
-      <!-- тег span используется для добавления нужных стилей отдельным участкам текста -->
-      <span style="color:red">Ya</span>tube
-    </a>
-  </div>
-</nav>
+<header>
+  {% with request.resolver_match.view_name as view_name %}
+  <nav id="head" class="navbar navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'posts:index' %}">
+        <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+        <span style="color:red">Ya</span>tube
+      </a>
+        <form class="d-flex" method="GET" action="{% url 'posts:search' %}">
+          <input class="form-control me-2" name=q type="text" placeholder="Поиск" aria-label="Поиск">
+          <button class="btn btn-outline-success" style= "background-color: #9c9595;
+                          border-color: #030303; outline-color: #545050 ; color: #030303"
+          type="submit">Поиск</button>
+        </form>
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a class="nav-link {% if view_name  == 'about:author' %}active_1{% endif %}"
+               style="color:#030303"
+               href="{% url 'about:author' %}">Об авторе</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if view_name  == 'about:tech' %}active_1{% endif %}"
+               style="color:#030303"
+               href="{% url 'about:tech' %}">Технологии</a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link {% if view_name  == 'posts:post_create' %}active_1{% endif %}"
+               style="color:#030303"
+               href="{% url 'posts:post_create' %}">Новая запись</a>
+          </li>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button"
+                   id="dropdownMenuButton" data-bs-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                  Пользователь: {{ user.username }}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item"
+                style="color:#030303"
+                href="{% url 'posts:profile' user.username %}">
+                  Профиль
+              </a>
+              <a class="dropdown-item"
+                href="{% url 'users:password_change' %}">
+                  Изменить пароль
+              </a>
+              {% if request.user.is_superuser %}
+              <a class="dropdown-item" href="{% url 'admin:index' %}">
+                Админ панель
+              </a>
+              {% endif %}
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item"
+                  href="{% url 'users:logout' %}">Выйти</a>
+            </div>
+          </div>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link link-light {% if view_name  == 'users:login' %}active_1{% endif %}"
+               style="color:#030303"
+               href="{% url 'users:login' %}">Войти</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link link-light {% if view_name  == 'users:signup' %}active_1{% endif %}"
+               style="color:#030303"
+               href="{% url 'users:signup' %}">Регистрация</a>
+          </li>
+          {% endif %}
+        </ul>
+    </div>
+  </nav>
+  {% endwith %}
+</header>

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}<title>Подписки на авторов</title>{% endblock title %}
+  {% block content %}
+    <main>
+      <div class="container py-5">
+        <h1>Подписки на авторов</h1>
+        {% include 'posts/includes/switcher.html' %}
+        {% for post in page_obj %}
+          {% include 'posts/includes/post_view.html' with template_index=True %}
+        {% endfor %}
+        {% include 'posts/includes/paginator.html' %}
+      </div>
+    </main>
+  {% endblock %}

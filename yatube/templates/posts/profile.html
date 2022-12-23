@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title%}
+<title>Профайл пользователя {{ username }}</title>
+{% endblock %}
+{% block content%}
+<div class="container py-5">
+  <div class="mb-5">
+    <h1>Все посты пользователя "{{ author.username }}":</h1>
+    <ol>Всего постов: {{ author.posts.count }}<hr></ol>
+    <ol>Количество подписчиков: {{ author.following.count }}<hr></ol>
+    <ol>Количество подписок: {{ author.follower.count }}<hr></ol>
+    <ol>
+    <div>
+      <span href="" style="color:green">
+        👍 +{{ likes }}
+      </span>
+      <span href="" style="color:red">
+        👎 -{{ dislikes }}
+      </span>
+    </div>
+    </ol>
+    {% if user != author %}
+      {% if following %}
+        <a
+          class="btn btn-lg btn-light"
+          href="{% url 'posts:profile_unfollow' author.username %}" role="button"
+        >
+          Отписаться
+        </a>
+      {% else %}
+        <a
+          class="btn btn-lg btn-primary"
+          href="{% url 'posts:profile_follow' author.username %}" role="button"
+        >
+          Подписаться
+        </a>
+      {% endif %}
+    {% endif %}
+  </div>
+  {% for post in page_obj %}
+      {% include 'posts/includes/post_view.html' with template_index=True %}
+      {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
+</div>
+{% endblock%}}

@@ -1,0 +1,89 @@
+{% extends 'base.html'%}
+{% block content %}
+<main>
+  <div class="container py-5">
+    <h2>Результаты поиска по сайту:</h2>
+    {% if post_list_text or group_list or author_list %}
+    {% for group in group_list %}
+      <ul>
+        <li>
+          Группа:
+          <a href="{% url 'posts:group_list' group.slug %}">
+            {{ group.title }}
+          </a>
+        </li>
+      </ul>
+      <hr>
+      {% endfor %}
+      {% for author in author_list %}
+      <ul>
+        <li>
+          {% if author.get_full_name %}
+            <a href="{% url 'posts:profile' author.username %}">
+            {{ author.get_full_name }}
+              {% if post.author == request.user %}
+                <span style="color:red">(Вы)</span>
+              {% endif %}
+            </a>
+          {% else %}
+            <a href="{% url 'posts:profile' author.username %}">
+              {{ author.username }}
+                {% if post.author == request.user %}
+                <span style="color:red">(Вы)</span>
+                {% endif %}
+            </a>
+          {% endif %}
+        </li>
+          <a class="btn btn-outline-primary btn-sm"
+             href="{% url 'posts:profile' author.username %}">
+            Все записи пользователя
+          </a>
+      </ul>
+      <hr>
+      {% endfor %}
+    <ul>
+      {% for post in post_list_text %}
+        <li>
+          Автор:
+          {% if post.author.get_full_name %}
+            <a href="{% url 'posts:profile' post.author.username %}">
+            {{ post.author.get_full_name }}
+              {% if post.author == request.user %}
+                <span style="color:red">(Вы)</span>
+              {% endif %}
+            </a>
+          {% else %}
+            <a href="{% url 'posts:profile' post.author.username %}">
+              {{ post.author.username }}
+                {% if post.author == request.user %}
+                <span style="color:red">(Вы)</span>
+                {% endif %}
+            </a>
+          {% endif %}
+        </li>
+        <li>
+          Дата публикации: {{ post.pub_date|date:"d E Y" }}
+        </li>
+      </ul>
+        <p>{{ post.text }}</p>
+      {% if post.group %}
+        <a class="btn btn-outline-primary btn-sm"
+          href="{% url 'posts:group_list' post.group.slug %}">
+            Все записи группы
+        </a>
+        <a class="btn btn-outline-primary btn-sm"
+          href="{% url 'posts:profile' post.author.username %}">
+            Все записи пользователя
+        </a>
+      {% endif %}
+        <hr>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p1>Извините, по вашему запросу ничегоне найдено...</p1>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}
+

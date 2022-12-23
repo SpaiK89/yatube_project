@@ -1,0 +1,42 @@
+{% load thumbnail %}
+<ul>
+  <li>
+    {% include 'posts/includes/author_view.html' %}
+  </li>
+  <li>
+    Дата публикации: {{ post.pub_date|date:"d E Y" }}
+  </li>
+</ul>
+{% thumbnail post.image "960x500" crop="center" upscale=True as im %}
+  <img class="card-img my-2" src="{{ im.url }}">
+{% endthumbnail %}
+<p>{{ post.text }}</p>
+  <div>
+    <b>Количество комментариев:</b>
+    <a href="{% url 'posts:post_detail' post.pk %}">
+        {{ post.comments.count }}
+    </a>
+  </div>
+<br>
+<a class="btn btn-outline-primary btn-sm"
+   href="{% url 'posts:post_detail' post.pk %}"
+   role="button">
+    Подробная информация
+</a>
+{% if template_index %}
+{% if post.group %}
+  <a class="btn btn-outline-primary btn-sm"
+     href="{% url 'posts:group_list' post.group.slug %}">
+    Все записи группы
+  </a>
+{% endif %}
+{% endif %}
+<div>
+<a href="{% url 'posts:like' post.id %}" style="color:green">
+  👍 +{{ post.like.count }}
+</a>
+<a href="{% url 'posts:dislike' post.id %}" style="color:red">
+  👎 -{{ post.dislike.count }}
+</a>
+</div>
+{% if not forloop.last %}<hr>{% endif %}

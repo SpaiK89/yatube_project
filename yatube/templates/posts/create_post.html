@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}
+  <title>
+  {% if is_edit %}
+    Редактировать пост
+  {% else %}
+    Новый пост
+  {% endif %}
+  </title>
+{% endblock %}
+{% block content %}
+      <div class="container py-5">
+        <div class="row justify-content-center">
+          <div class="col-md-8 p-5">
+            <div class="card">
+              <div class="card-header">       
+                {% if is_edit %}
+                  Редактировать пост
+                {% else %}
+                  Новый пост
+                {% endif %}
+              </div>
+              <div class="card-body">
+                {% include 'posts/includes/form.errors.html' %}
+                {% include 'includes/field_in_form.html' %}
+                    <button type="submit" class="btn btn-primary">
+                      {% if is_edit %}
+                        Редактировать
+                      {% else %}
+                        Сохранить
+                      {% endif %}
+                    </button>
+                    <button id="cancel" name="cancel" class="btn btn-default" onclick="history.back()">
+                      Отмена
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

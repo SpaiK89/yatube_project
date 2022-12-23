@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}<title>Войти</title>{% endblock %}
+{% block content %}
+{% load user_filters %}
+{% include 'users/includes/template_class_top.html' %}
+  <div class="card-header">
+    Войти на сайт
+  </div>
+  <div class="card-body">
+    {% include 'posts/includes/form.errors.html' %}
+    <form method="post" action="#">
+      {% csrf_token %}
+      <div class="form-group row my-3">
+        <label for="id_username">
+          Имя пользователя
+          <span class="required text-danger">*</span>
+        </label>
+        <input type="text" name="username" autofocus class="form-control" required id="id_username">
+      </div>
+      <div class="form-group row my-3">
+        <label for="id_password">
+          Пароль
+          <span class="required text-danger">*</span>
+        </label>
+        <input type="password" name="password" class="form-control" required id="id_password">
+      </div>
+      <div class="col-md-6 offset-md-4">
+        <button type="submit" class="btn btn-primary">
+          Войти
+        </button>
+        <a href="{% url 'users:password_reset' %}" class="btn btn-link">
+          Забыли пароль?
+        </a>
+      </div>
+    </form>
+  </div>
+{% include 'users/includes/template_class_foot.html' %}
+{% endblock %}
