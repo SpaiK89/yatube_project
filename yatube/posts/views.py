@@ -63,6 +63,7 @@ def post_detail(request, post_id):
         Post.objects.select_related('author', 'group'), pk=post_id
     )
     comments = post.comments.select_related('author', 'comment_p').all()
+
     form = CommentForm(request.POST or None)
     template = 'posts/post_detail.html'
     context = {'post': post, 'comments': comments, 'form': form }

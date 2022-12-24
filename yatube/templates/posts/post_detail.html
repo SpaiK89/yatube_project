@@ -22,6 +22,7 @@
             {% endif %}
             </li>
             <li class="list-group-item">
+              Автор:
               {% include 'posts/includes/author_view.html' %}
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -52,6 +53,7 @@
                   href="{% url 'posts:post_edit' post.id %}"
                   role="button">Редактировать пост
                 </a>
+                <div style="padding: 4px 0px"></div>
                 <button type="button" class="btn btn-danger col-12"
                   data-bs-toggle="modal" data-bs-target="#Modal">
                   Удалить пост
@@ -114,78 +116,18 @@
           <div id="myform">
           {% for comment in comments %}
           {% if not comment.comment_p %}
-          <div class="media mb-4">
+          <div class="media mb-4" style="padding: 0px 15px">
             <div class="media-body">
-              <h5 class="mt-0">
-              <a href="{% url 'posts:profile' comment.author.username %}">
-                {{ comment.author }}
-                {% if comment.author.username == request.user.username %}
-                  <span style="color:red">(Вы)</span>
-                {% endif %}
-              </a>
-              </h5>
-              <p style="font:menu; color:grey">
-                {{ comment.created}}</p>
-              <p>
-              {{ comment.text|safe|linebreaksbr }}
-              </p>
-              <a data-bs-toggle="collapse"
-                 href="#collapseComment{{comment.pk}}" aria-expanded="false"
-                 aria-controls="collapseComments">
-                 <span style="font:menu">Развернуть ответы</span>
-              </a>
-                <a data-bs-toggle="collapse"
-                   href="#collapse{{comment.pk}}" aria-expanded="false"
-                   aria-controls="collapseExample">
-                  <span style="font:menu">Ответить</span>
-                </a>
-                <div class="collapse" id="collapse{{comment.pk}}">
-                  <div class="card card-body">
-                    <form method="post"
-                          action="{% url 'posts:add_comment_to_comment' post.id comment.id %}">
-                      {% csrf_token %}
-                      <div class="form-group mb-2">
-                        {{ form.text|addclass:'form-control' }}
-                      </div>
-                      <button type="submit" class="btn btn-primary">Отправить</button>
-                    </form>
-                  </div>
-                </div>
-                <a href="{% url 'posts:add_comment_with_quote' post.id comment.id %}">
-                  <span style="font:menu">Процитировать</span>
-                </a>
-              {% if comment.author.username == request.user.username or request.user.is_superuser %}
-                <a href="{% url 'posts:comment_del' post.id comment.id %}"
-                style="float: right;">
-                  <span style="color:red; font:menu">Удалить комментарий</span>
-                </a>
-              {% endif %}
+              {% include 'posts/includes/comment_view.html' with global_comment=True %}
               {% for comment_d in comments %}
               {% if comment.pk == comment_d.comment_p.id  %}
-                <div class="collapse" style="padding: 5px 30px " id="collapseComment{{comment.pk}}">
+                <div class="collapse" style="padding: 0px 30px" id="collapseComment{{comment.pk}}">
+                  <hr>
                   <div class="media mb-4">
                     <div class="media-body">
-                      <h5 class="mt-0">
-                        <a href="{% url 'posts:profile' comment_d.author.username %}">
-                          {{ comment_d.author }}
-                            {% if comment.author.username == request.user.username %}
-                              <span style="color:red">(Вы)</span>
-                            {% endif %}
-                        </a>
-                      </h5>
-                      <p style="font:menu; color:grey">
-                        {{ comment_d.created}}</p>
-                      <p>
-                      {{ comment_d.text|safe|linebreaksbr }}
-                      </p>
-                      {% if comment.author.username == request.user.username or request.user.is_superuser %}
-                        <a href="{% url 'posts:comment_del' post.id comment_d.id %}">
-                          <span style="color:red; font:menu">Удалить комментарий</span>
-                        </a>
-                      {% endif %}
-                      <hr>
-                      </div>
+                      {% include 'posts/includes/comment_view.html' with comment=comment_d %}
                     </div>
+                  </div>
                 </div>
               {% endif %}
               {% endfor %}
