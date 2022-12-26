@@ -1,4 +1,5 @@
 {% extends 'base.html'%}
+{% load static %}
   {% block title %}
     <title>Об авторе:</title>
   {% endblock %}
@@ -7,5 +8,6 @@
     <h1>Об авторе</h1>
     <p>Меня зовут Игорь Богомолов. Я студент Яндекс.Практикума.<br>
        Учусь создавать статические страницы.</p>
+    <img src="{% static 'img/pam.jpg' %}" width="300" height="300" class="d-inline-block align-top" alt="">
   </div>
   {% endblock %}

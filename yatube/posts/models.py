@@ -59,6 +59,13 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    hidden_text = models.TextField(
+        default=None,
+        blank=True,
+        null=True,
+        verbose_name="Цитата",
+        help_text='Отредактируйте цитату при необходимости'
+    )
     text = models.TextField(
         verbose_name="Текст комментария",
         help_text='Введите текст комментария'

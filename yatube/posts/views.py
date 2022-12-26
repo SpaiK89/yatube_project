@@ -140,9 +140,10 @@ def add_comment_with_quote(request, post_id, comment_id):
     post = get_object_or_404(Post, pk=post_id)
     comment = get_object_or_404(Comment, post=post_id, pk=comment_id)
     comments = post.comments.select_related('author').all()
-    comment.text = f'<blockquote class="blockquote-2">' \
+    comment.hidden_text = f'<blockquote class="blockquote-2">' \
                    f'<p> {comment.text} </p> ' \
                    f'<cite> {comment.author}</cite></blockquote>'
+    comment.text = None
     form = CommentForm(request.POST or None, instance=comment)
     if form.is_valid():
         comment = form.save(commit=False)
@@ -151,7 +152,7 @@ def add_comment_with_quote(request, post_id, comment_id):
         comment.save()
         return redirect('posts:post_detail', post_id=post_id)
     template = 'posts/post_detail.html'
-    context = {'form': form, 'post': post, 'comments': comments}
+    context = {'form': form, 'post': post, 'comments': comments, 'not_hidden': True}
     return render(request, template, context)
 
 
