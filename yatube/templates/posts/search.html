@@ -2,63 +2,22 @@
 {% block content %}
 <main>
   <div class="container py-5">
-    <h2>Результаты поиска по сайту:</h2>
-    {% if post_list_text or group_list or author_list %}
-    {% for group in group_list %}
-      <ul>
-        <li>
-          Группа:
-          <a href="{% url 'posts:group_list' group.slug %}">
-            {{ group.title }}
-          </a>
-        </li>
-      </ul>
-      <hr>
-      {% endfor %}
-      {% for author in author_list %}
-      <ul>
-        <li>
-          {% if author.get_full_name %}
-            <a href="{% url 'posts:profile' author.username %}">
-            {{ author.get_full_name }}
-              {% if post.author == request.user %}
-                <span style="color:red">(Вы)</span>
-              {% endif %}
-            </a>
-          {% else %}
-            <a href="{% url 'posts:profile' author.username %}">
-              {{ author.username }}
-                {% if post.author == request.user %}
-                <span style="color:red">(Вы)</span>
-                {% endif %}
-            </a>
-          {% endif %}
-        </li>
-          <a class="btn btn-outline-primary btn-sm"
-             href="{% url 'posts:profile' author.username %}">
-            Все записи пользователя
-          </a>
-      </ul>
-      <hr>
-      {% endfor %}
+    <h2>Результаты поиска по сайту по запросу "{{ query }}":</h2>
+    {% if page_obj %}
     <ul>
-      {% for post in post_list_text %}
+      {% for post in page_obj %}
         <li>
           Автор:
-          {% if post.author.get_full_name %}
-            <a href="{% url 'posts:profile' post.author.username %}">
-            {{ post.author.get_full_name }}
-              {% if post.author == request.user %}
-                <span style="color:red">(Вы)</span>
-              {% endif %}
+          {% include 'posts/includes/author_view.html' %}
+        </li>
+        <li>
+          Группа:
+          {% if post.group %}
+            <a href="{% url 'posts:group_list' post.group.slug %}">
+              {{ post.group }}
             </a>
           {% else %}
-            <a href="{% url 'posts:profile' post.author.username %}">
-              {{ post.author.username }}
-                {% if post.author == request.user %}
-                <span style="color:red">(Вы)</span>
-                {% endif %}
-            </a>
+            отсутствует
           {% endif %}
         </li>
         <li>
@@ -78,10 +37,9 @@
       {% endif %}
         <hr>
       {% endfor %}
-
-    </ul>
+      {% include 'posts/includes/paginator.html' with simbol='&' %}
     {% else %}
-      <p1>Извините, по вашему запросу ничегоне найдено...</p1>
+      <p1>Извините, по вашему запросу "{{ query }}" ничего не найдено...</p1>
     {% endif %}
   </div>
 </main>

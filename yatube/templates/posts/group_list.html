@@ -11,7 +11,7 @@
         {% for post in page_obj %}
           {% include 'posts/includes/post_view.html' %}
         {% endfor %}
-        {% include 'posts/includes/paginator.html' %}
+        {% include 'posts/includes/paginator.html' with simbol='?' %}
       </div>
     </main>
   {% endblock %}

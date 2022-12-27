@@ -1,7 +1,6 @@
 {% extends 'base.html'%}
 {% load cache %}
   {% block content %}
-  {% cache 20 index_page %}
     <main>
       <div class="container py-5">
         <h1>{{ text }}</h1>
@@ -9,9 +8,8 @@
         {% for post in page_obj %}
           {% include 'posts/includes/post_view.html' with template_index=True %}
         {% endfor %}
-        {% include 'posts/includes/paginator.html' %}
+        {% include 'posts/includes/paginator.html' with simbol='?' %}
       </div>
     </main>
-  {% endcache %}
   {% endblock %}
 

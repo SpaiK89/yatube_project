@@ -193,21 +193,21 @@ def profile_unfollow(request, username):
 def search(request):
     template = 'posts/search.html'
     if request.method == 'GET' and request.GET['q']:
-        context = {}
         query = request.GET.get('q')
-        post_list_text = Post.objects.select_related('group', 'author').filter(
-            text__iregex=query
+        query_q = f'?q={query}'
+        search_list = Post.objects.select_related('group', 'author').filter(
+            Q(text__iregex=query) |
+            Q(group__title__iregex=query) |
+            Q(author__first_name__iregex=query) |
+            Q(author__last_name__iregex=query) |
+            Q(author__username__iregex=query)
         )
-        context['post_list_text'] = post_list_text
-        group_list = Group.objects.select_related().filter(
-            title__iregex=query
-        )
-        context['group_list'] = group_list
-        author_list = User.objects.select_related().filter(
-            Q(first_name__iregex=query) | Q(last_name__iregex=query)
-            | Q(username__iregex=query)
-        )
-        context['author_list'] = author_list
+        page_obj = paginator_func(request, search_list)
+        context = {
+            'page_obj': page_obj,
+            'query': query,
+            'query_q': query_q,
+        }
         return render(request, template, context)
     return render(request, template)
 
